@@ -232,3 +232,13 @@ Disassembly of section .text:
 80200000: 09 a0                         j       2
 80200002: 01 a0                         j       0
 ```
+
+需要加上这个才能正常编译
+
+```rust
+#![feature(llvm_asm)]
+```
+
+随后封装了 sbi 调用，console 以及 panic 处理方法。
+
+看着一个 os 从零到开始，真的好开心啊。
