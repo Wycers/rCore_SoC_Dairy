@@ -19,9 +19,13 @@
 //!   panic! 时，获取其中的信息并打印
 #![feature(panic_info_message)]
 #![feature(llvm_asm)]
+#![feature(alloc_error_handler)]
+
+extern crate alloc;
 
 use os::interrupt;
 use os::println;
+use os::memory;
 
 // 汇编编写的程序入口，具体见该文件
 global_asm!(include_str!("asm/entry.asm"));
@@ -31,12 +35,23 @@ global_asm!(include_str!("asm/entry.asm"));
 /// 在 `_start` 为我们进行了一系列准备之后，这是第一个被调用的 Rust 函数
 #[no_mangle]
 pub extern "C" fn rust_main() -> ! {
+    // 初始化各种模块
     interrupt::init();
+    memory::init();
 
-    println!("asdfasdfasdfasasdfasdfasddfas");
-
-    unsafe {
-        llvm_asm!("ebreak"::::"volatile");
+    // 动态内存分配测试
+    use alloc::boxed::Box;
+    use alloc::vec::Vec;
+    let v = Box::new(5);
+    assert_eq!(*v, 5);
+    let mut vec = Vec::new();
+    for i in 0..10000 {
+        vec.push(i);
     }
-    loop {}
+    for i in 0..10000 {
+        assert_eq!(vec[i], i);
+    }
+    println!("heap test passed");
+
+    loop{}
 }
