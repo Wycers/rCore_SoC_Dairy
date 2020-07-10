@@ -21,3 +21,5 @@
 - Finish exercises `enums`
 - Finish exercises `modules`
 - Finish exercises `macros`
+
+给`rustlings`提了个[issue](https://github.com/rust-lang/rustlings/issues/465)
