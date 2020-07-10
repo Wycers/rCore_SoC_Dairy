@@ -5,7 +5,7 @@
 ## 回顾
 
 - 实现了一个内核堆
-- 用 Rust 刷了 LeetCode #2 #3 #7
+- 用 Rust 刷了 LeetCode #1
 
 ## Lab
 
