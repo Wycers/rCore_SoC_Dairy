@@ -24,8 +24,8 @@
 extern crate alloc;
 
 use os::interrupt;
-use os::println;
 use os::memory;
+use os::println;
 
 // 汇编编写的程序入口，具体见该文件
 global_asm!(include_str!("asm/entry.asm"));
@@ -52,6 +52,7 @@ pub extern "C" fn rust_main() -> ! {
         assert_eq!(vec[i], i);
     }
     println!("heap test passed");
+    println!("{}", *memory::config::KERNEL_END_ADDRESS);
 
-    loop{}
+    loop {}
 }

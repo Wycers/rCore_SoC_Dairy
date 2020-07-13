@@ -1,7 +1,8 @@
 #![feature(alloc_error_handler)]
 
+mod address;
+pub mod config;
 mod heap;
-mod config;
 
 pub fn init() {
     heap::init();
