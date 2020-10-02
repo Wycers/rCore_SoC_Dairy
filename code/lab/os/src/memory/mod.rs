@@ -1,8 +1,13 @@
 #![feature(alloc_error_handler)]
 
-mod address;
-pub mod config;
+pub mod address;
+pub mod frame;
+pub type MemoryResult<T> = Result<T, &'static str>;
+
+mod config;
 mod heap;
+mod range;
+
 
 pub fn init() {
     heap::init();

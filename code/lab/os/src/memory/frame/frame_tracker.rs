@@ -1,3 +1,6 @@
+use crate::memory::address::{PhysicalAddress, PhysicalPageNumber};
+use crate::memory::frame::allocator::FRAME_ALLOCATOR;
+
 /// 分配出的物理页
 ///
 /// # `Tracker` 是什么？
@@ -15,7 +18,7 @@
 ///
 /// 使用 `Tracker` 其实就很像使用一个 smart pointer。如果需要引用计数，
 /// 就在外面再套一层 [`Arc`](alloc::sync::Arc) 就好
-pub struct FrameTracker(PhysicalAddress);
+pub struct FrameTracker(pub PhysicalAddress);
 
 impl FrameTracker {
     /// 帧的物理地址
