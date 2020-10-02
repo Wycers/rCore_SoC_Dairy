@@ -1,7 +1,7 @@
 use super::context::Context;
+use crate::interrupt::timer;
 use riscv::register::stvec;
 use riscv::register::scause::{Scause, Trap, Exception, Interrupt};
-use crate::interrupt::timer;
 
 global_asm!(include_str!("../asm/interrupt.asm"));
 
@@ -22,11 +22,16 @@ pub fn init() {
 /// `interrupt.asm` 首先保存寄存器至 Context，其作为参数和 scause 以及 stval 一并传入此函数
 /// 具体的中断类型需要根据 scause 来推断，然后分别处理
 #[no_mangle]
-pub fn handle_interrupt(_context: &mut Context, scause: Scause, _stval: usize) {
+pub fn handle_interrupt(context: &mut Context, scause: Scause, stval: usize) {
+    // 可以通过 Debug 来查看发生了什么中断
+    // println!("{:x?}", context.scause.cause());
     // match scause.cause() {
+    //     // 断点中断（ebreak）
     //     Trap::Exception(Exception::Breakpoint) => breakpoint(context),
+    //     // 时钟中断
     //     Trap::Interrupt(Interrupt::SupervisorTimer) => supervisor_timer(context),
-    //     _ => unimplemented!("{:?}: {:x?}, stval: 0x{:x}", scause.cause(), context, stval),
+    //     // 其他情况，终止当前线程
+    //     _ => fault(context, scause, stval),
     // }
     panic!("Interrupted: {:?}", scause.cause());
 }
