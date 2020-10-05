@@ -23,6 +23,7 @@ pub const KERNEL_HEAP_SIZE: usize = 0x80_0000;
 
 /// 页 / 帧大小，必须是 2^n
 pub const PAGE_SIZE: usize = 4096;
+pub const PAGE_ENTRY_SIZE: usize = 8;
 
 /// 可以访问的内存区域起始地址
 pub const MEMORY_START_ADDRESS: PhysicalAddress = PhysicalAddress(0x8000_0000);

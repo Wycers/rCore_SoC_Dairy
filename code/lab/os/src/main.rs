@@ -33,7 +33,6 @@ use os::println;
 
 // 汇编编写的程序入口，具体见该文件
 global_asm!(include_str!("asm/entry.asm"));
-
 /// Rust 的入口函数
 ///
 /// 在 `_start` 为我们进行了一系列准备之后，这是第一个被调用的 Rust 函数
@@ -43,18 +42,10 @@ pub extern "C" fn rust_main() -> ! {
     interrupt::init();
     memory::init();
 
-    // 物理页分配
-    for _ in 0..2 {
-        let frame_0 = match memory::frame::allocator::FRAME_ALLOCATOR.lock().alloc() {
-            Result::Ok(frame_tracker) => frame_tracker,
-            Result::Err(err) => panic!("{}", err)
-        };
-        let frame_1 = match memory::frame::allocator::FRAME_ALLOCATOR.lock().alloc() {
-            Result::Ok(frame_tracker) => frame_tracker,
-            Result::Err(err) => panic!("{}", err)
-        };
-        println!("{} and {}", frame_0.address(), frame_1.address());
-    }
+    let remap = memory::mapping::MemorySet::new_kernel().unwrap();
+    remap.activate();
+
+    println!("kernel remapped");
 
     loop {}
 }

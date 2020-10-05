@@ -1,4 +1,4 @@
-// use bit_field::BitField;
+use bit_field::BitField;
 
 use super::config::{KERNEL_MAP_OFFSET, PAGE_SIZE};
 
@@ -94,16 +94,16 @@ impl PhysicalPageNumber {
     }
 }
 
-// impl VirtualPageNumber {
-//     /// 得到一、二、三级页号
-//     pub fn levels(self) -> [usize; 3] {
-//         [
-//             self.0.get_bits(18..27),
-//             self.0.get_bits(9..18),
-//             self.0.get_bits(0..9),
-//         ]
-//     }
-// }
+impl VirtualPageNumber {
+    /// 得到一、二、三级页号
+    pub fn levels(self) -> [usize; 3] {
+        [
+            self.0.get_bits(18..27),
+            self.0.get_bits(9..18),
+            self.0.get_bits(0..9),
+        ]
+    }
+}
 
 macro_rules! implement_address_to_page_number {
     // 这里面的类型转换实现 [`From`] trait，会自动实现相反的 [`Into`] trait
