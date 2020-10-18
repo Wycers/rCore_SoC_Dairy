@@ -36,14 +36,18 @@ pub fn handle_interrupt(context: &mut Context, scause: Scause, stval: usize) {
     panic!("Interrupted: {:?}", scause.cause());
 }
 
-fn breakpoint(context: &mut Context) {
+fn breakpoint(context: &mut Context) -> *mut Context {
     println!("Breakpoint at 0x{:x}", context.sepc);
     for (index, reg_val) in context.x[1..].iter().enumerate() {
         println!("Value of register x{} is {:x}", index + 1, reg_val);
     }
     context.sepc += 2;
+    context
 }
 
-fn supervisor_timer(_: &Context) {
+/// 处理时钟中断
+fn supervisor_timer(_: &Context) -> *mut Context {
     timer::tick();
+    PROCESSOR.lock().park_current_thread(context);
+    PROCESSOR.lock().prepare_next_thread()
 }
