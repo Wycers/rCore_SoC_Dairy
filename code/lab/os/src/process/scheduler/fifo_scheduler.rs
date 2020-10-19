@@ -1,4 +1,7 @@
+#![feature(drain_filter)]
+
 use super::Scheduler;
+
 use alloc::collections::LinkedList;
 
 /// 采用 FIFO 算法的线程调度器

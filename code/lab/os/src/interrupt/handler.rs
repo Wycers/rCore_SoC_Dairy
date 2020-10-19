@@ -50,6 +50,7 @@ fn breakpoint(context: &mut Context) -> *mut Context {
 /// 处理时钟中断
 fn supervisor_timer(context: &mut Context) -> *mut Context {
     timer::tick();
+
     PROCESSOR.lock().park_current_thread(context);
     PROCESSOR.lock().prepare_next_thread()
 }
