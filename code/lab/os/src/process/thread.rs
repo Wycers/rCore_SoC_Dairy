@@ -1,3 +1,25 @@
+use alloc::sync::Arc;
+use core::hash::{Hash, Hasher};
+use core::mem::size_of;
+
+use lazy_static::lazy_static;
+use spin::{Mutex, RwLock};
+
+use crate::interrupt::context::Context;
+use crate::memory::address::VirtualAddress;
+use crate::memory::mapping::mapping::Mapping;
+use crate::memory::mapping::{new_kernel, Flags};
+use crate::memory::range::Range;
+use crate::memory::MemoryResult;
+use crate::process::config::STACK_SIZE;
+use crate::process::kernel_stack::{KernelStack, KERNEL_STACK};
+use crate::process::process::Process;
+// use crate::test::kernel_memory_check::kernel_memory_check;
+
+pub type ThreadID = isize;
+
+static mut THREAD_COUNTER: ThreadID = 0;
+
 /// 线程的信息
 pub struct Thread {
     /// 线程 ID
@@ -22,22 +44,24 @@ pub struct ThreadInner {
     pub dead: bool,
 }
 
-/// 发生时钟中断后暂停线程，保存状态
-pub fn park(&self, context: Context) {
-    // 检查目前线程内的 context 应当为 None
-    assert!(self.inner().context.is_none());
-    // 将 Context 保存到线程中
-    self.inner().context.replace(context);
-}
+impl Thread {
+    /// 发生时钟中断后暂停线程，保存状态
+    pub fn park(&self, context: Context) {
+        // 检查目前线程内的 context 应当为 None
+        assert!(self.inner().context.is_none());
+        // 将 Context 保存到线程中
+        self.inner().context.replace(context);
+    }
 
-/// 准备执行一个线程
-///
-/// 激活对应进程的页表，并返回其 Context
-pub fn prepare(&self) -> *mut Context {
-    // 激活页表
-    self.process.inner().memory_set.activate();
-    // 取出 Context
-    let parked_frame = self.inner().context.take().unwrap();
-    // 将 Context 放至内核栈顶
-    unsafe { KERNEL_STACK.push_context(parked_frame) }
+    /// 准备执行一个线程
+    ///
+    /// 激活对应进程的页表，并返回其 Context
+    pub fn prepare(&self) -> *mut Context {
+        // 激活页表
+        self.process.inner().memory_set.activate();
+        // 取出 Context
+        let parked_frame = self.inner().context.take().unwrap();
+        // 将 Context 放至内核栈顶
+        unsafe { KERNEL_STACK.push_context(parked_frame) }
+    }
 }

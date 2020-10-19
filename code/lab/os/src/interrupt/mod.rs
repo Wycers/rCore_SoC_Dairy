@@ -3,7 +3,7 @@
 //!
 
 mod handler;
-mod context;
+pub mod context;
 mod timer;
 
 /// 初始化中断相关的子模块

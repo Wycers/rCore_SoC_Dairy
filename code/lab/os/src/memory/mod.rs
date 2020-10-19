@@ -7,7 +7,7 @@ pub type MemoryResult<T> = Result<T, &'static str>;
 
 mod config;
 mod heap;
-mod range;
+pub mod range;
 
 pub fn init() {
     heap::init();

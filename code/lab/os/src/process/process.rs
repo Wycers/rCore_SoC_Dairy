@@ -1,3 +1,7 @@
+use crate::memory::mapping::memory_set::MemorySet;
+
+use spin::{Mutex};
+
 /// 进程的信息
 pub struct Process {
     /// 是否属于用户态

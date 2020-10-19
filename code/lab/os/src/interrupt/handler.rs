@@ -3,6 +3,8 @@ use crate::interrupt::timer;
 use riscv::register::stvec;
 use riscv::register::scause::{Scause, Trap, Exception, Interrupt};
 
+use crate::process::processor::PROCESSOR;
+
 global_asm!(include_str!("../asm/interrupt.asm"));
 
 /// 初始化中断处理
@@ -46,7 +48,7 @@ fn breakpoint(context: &mut Context) -> *mut Context {
 }
 
 /// 处理时钟中断
-fn supervisor_timer(_: &Context) -> *mut Context {
+fn supervisor_timer(context: &mut Context) -> *mut Context {
     timer::tick();
     PROCESSOR.lock().park_current_thread(context);
     PROCESSOR.lock().prepare_next_thread()
