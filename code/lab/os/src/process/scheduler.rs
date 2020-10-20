@@ -6,9 +6,24 @@ pub mod fifo_scheduler;
 
 pub type SchedulerImpl<ThreadType> = FifoScheduler<ThreadType>;
 
+/// 线程调度器
+///
+/// `ThreadType` 应为 `Arc<Thread>`
+///
+/// ### 使用方法
+/// - 在每一个时间片结束后，调用 [`Scheduler::get_next()`] 来获取下一个时间片应当执行的线程。
+///   这个线程可能是上一个时间片所执行的线程。
+/// - 当一个线程结束时，需要调用 [`Scheduler::remove_thread()`] 来将其移除。这个方法必须在
+///   [`Scheduler::get_next()`] 之前调用。
 pub trait Scheduler<ThreadType: Clone + Eq>: Default {
-    fn add_thread<T>(&mut self, thread: ThreadType, priority: T);
+    /// 优先级的类型
+    type Priority;
+    /// 向线程池中添加一个线程
+    fn add_thread(&mut self, thread: ThreadType);
+    /// 获取下一个时间段应当执行的线程
     fn get_next(&mut self) -> Option<ThreadType>;
+    /// 移除一个线程
     fn remove_thread(&mut self, thread: &ThreadType);
-    fn set_priority<T>(&mut self, thread: ThreadType, priority: T);
+    /// 设置线程的优先级
+    fn set_priority(&mut self, thread: ThreadType, priority: Self::Priority);
 }
