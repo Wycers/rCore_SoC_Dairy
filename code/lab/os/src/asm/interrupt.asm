@@ -28,13 +28,6 @@ __interrupt:
     csrr    x1, sscratch
     SAVE    x1, 2
 
-    # 在栈上开辟 Context 所需的空间
-    addi    sp, sp, -34*8
-    # 保存通用寄存器，除了 x0（固定为 0）
-    SAVE    x1, 1
-    addi    x1, sp, 34*8
-    # 将原来的 sp（sp 又名 x2）写入 2 位置
-    SAVE    x1, 2
     SAVE    x3, 3
     SAVE    x4, 4
     SAVE    x5, 5
@@ -92,14 +85,6 @@ __restore:
     # 将内核栈地址写入 sscratch
     addi    t0, sp, 36*8
     csrw    sscratch, t0
-
-    mv      sp, a0 # 从 a0 中读取设计好的Context
-    # 恢复 CSR
-    LOAD    s1, 32
-    LOAD    s2, 33
-    # 思考：为什么不恢复 scause 和 stval？如果不恢复，为什么之前要保存
-    csrw    sstatus, s1
-    csrw    sepc, s2
 
     # 恢复通用寄存器
     LOAD    x1, 1

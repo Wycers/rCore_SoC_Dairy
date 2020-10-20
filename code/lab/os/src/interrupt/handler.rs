@@ -1,7 +1,7 @@
 use super::context::Context;
 use crate::interrupt::timer;
 use riscv::register::stvec;
-use riscv::register::scause::{Scause, Trap, Exception, Interrupt};
+use riscv::register::scause::{Scause};
 
 use crate::process::processor::PROCESSOR;
 

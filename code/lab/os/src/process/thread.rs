@@ -8,6 +8,7 @@ use crate::memory::mapping::Flags;
 
 use crate::process::config::STACK_SIZE;
 use super::process::Process;
+use super::kernel_stack::KERNEL_STACK;
 
 
 /// 线程 ID 使用 `isize`，可以用负数表示错误

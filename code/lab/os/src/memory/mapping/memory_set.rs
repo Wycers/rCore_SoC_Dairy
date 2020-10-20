@@ -1,7 +1,7 @@
 use alloc::vec;
 use alloc::vec::Vec;
 
-use crate::memory::address::{PhysicalAddress, VirtualAddress, VirtualPageNumber};
+use crate::memory::address::{VirtualAddress, VirtualPageNumber};
 use crate::memory::config::{KERNEL_END_ADDRESS, MEMORY_END_ADDRESS};
 use crate::memory::mapping::mapping::Mapping;
 use crate::memory::mapping::segment::Segment;
@@ -76,7 +76,6 @@ impl MemorySet {
     pub fn activate(&self) {
         self.mapping.activate()
     }
-
 
     /// 添加一个 [`Segment`] 的内存映射
     pub fn add_segment(&mut self, segment: Segment, init_data: Option<&[u8]>) -> MemoryResult<()> {

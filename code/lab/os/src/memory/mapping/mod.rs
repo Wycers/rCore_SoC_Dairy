@@ -1,5 +1,4 @@
 use alloc::vec;
-use alloc::vec::Vec;
 
 pub use page_table_entry::Flags;
 

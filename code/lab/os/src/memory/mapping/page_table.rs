@@ -1,5 +1,5 @@
 use crate::memory::address::PhysicalPageNumber;
-use crate::memory::config::{PAGE_ENTRY_SIZE, PAGE_SIZE};
+use crate::memory::config::{PAGE_SIZE};
 use crate::memory::frame::frame_tracker::FrameTracker;
 use crate::memory::mapping::page_table_entry::PageTableEntry;
 

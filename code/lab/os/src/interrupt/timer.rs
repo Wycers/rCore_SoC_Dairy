@@ -1,5 +1,5 @@
 use crate::sbi::set_timer;
-use riscv::register::{time, sie, sstatus};
+use riscv::register::{time, sie};
 
 static INTERVAL: usize = 10_0000;
 pub static mut TICKS: usize = 0;
