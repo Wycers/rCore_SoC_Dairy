@@ -76,4 +76,41 @@ impl MemorySet {
     pub fn activate(&self) {
         self.mapping.activate()
     }
+
+
+    /// 添加一个 [`Segment`] 的内存映射
+    pub fn add_segment(&mut self, segment: Segment, init_data: Option<&[u8]>) -> MemoryResult<()> {
+        // 检测 segment 没有重合
+        assert!(!self.overlap_with(segment.page_range()));
+        // 映射并将新分配的页面保存下来
+        self.mapping.map(&segment, init_data)?;
+        self.segments.push(segment);
+        Ok(())
+    }
+
+    /// 移除一个 [`Segment`] 的内存映射
+    ///
+    /// `segment` 必须已经映射
+    pub fn remove_segment(&mut self, segment: &Segment) -> MemoryResult<()> {
+        // 找到对应的 segment
+        let segment_index = self
+            .segments
+            .iter()
+            .position(|s| s == segment)
+            .expect("segment to remove cannot be found");
+        self.segments.remove(segment_index);
+        // 移除映射
+        self.mapping.unmap(segment);
+        Ok(())
+    }
+
+    /// 检测一段内存区域和已有的是否存在重叠区域
+    pub fn overlap_with(&self, range: Range<VirtualPageNumber>) -> bool {
+        for seg in self.segments.iter() {
+            if range.overlap_with(&seg.page_range()) {
+                return true;
+            }
+        }
+        false
+    }
 }

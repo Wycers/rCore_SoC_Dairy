@@ -29,6 +29,21 @@ lazy_static! {
     pub static ref PROCESSOR: Lock<Processor> = Lock::new(Processor::default());
 }
 
+lazy_static! {
+    /// 空闲线程：当所有线程进入休眠时，切换到这个线程——它什么都不做，只会等待下一次中断
+    static ref IDLE_THREAD: Arc<Thread> = Thread::new(
+        Process::new_kernel().unwrap(),
+        wait_for_interrupt as usize,
+        None,
+    ).unwrap();
+}
+/// 不断让 CPU 进入休眠等待下一次中断
+unsafe fn wait_for_interrupt() {
+    loop {
+        llvm_asm!("wfi" :::: "volatile");
+    }
+}
+
 impl Processor {
     /// 获取一个当前线程的 `Arc` 引用
     pub fn current_thread(&self) -> Arc<Thread> {

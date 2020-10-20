@@ -1,9 +1,6 @@
 #![feature(drain_filter)]
-
-use super::Scheduler;
-
 use alloc::collections::LinkedList;
-
+use super::Scheduler;
 /// 采用 FIFO 算法的线程调度器
 pub struct FifoScheduler<ThreadType: Clone + Eq> {
     pool: LinkedList<ThreadType>,

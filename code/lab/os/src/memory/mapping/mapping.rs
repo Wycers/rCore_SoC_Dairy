@@ -139,6 +139,19 @@ impl Mapping {
         Ok(())
     }
 
+    /// 移除一段映射
+    pub fn unmap(&mut self, segment: &Segment) {
+        for vpn in segment.page_range().iter() {
+            let entry = self.find_entry(vpn).unwrap();
+            assert!(!entry.is_empty());
+            // 从页表中清除项
+            entry.clear();
+        }
+        // 移除相应的页面
+        self.mapped_pairs
+            .retain(|(vpn, _)| !segment.page_range().contains(*vpn))
+    }
+
     /// 将当前的映射加载到 `satp` 寄存器
     pub fn activate(&self) {
         // satp 低 27 位为页号，高 4 位为模式，8 表示 Sv39
