@@ -24,12 +24,14 @@
 #![feature(panic_info_message)]
 #![feature(llvm_asm)]
 #![feature(alloc_error_handler)]
+#![feature(drain_filter)]
 
 extern crate alloc;
 
 use os::interrupt;
 use os::memory;
 use os::println;
+use os::process::processor::PROCESSOR;
 
 // 汇编编写的程序入口，具体见该文件
 global_asm!(include_str!("asm/entry.asm"));

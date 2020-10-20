@@ -1,5 +1,6 @@
 use alloc::sync::Arc;
 
+use crate::process::scheduler::Scheduler;
 use crate::process::scheduler::SchedulerImpl;
 
 use lazy_static::lazy_static;

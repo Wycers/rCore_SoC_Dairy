@@ -1,4 +1,5 @@
 #![feature(global_asm)]
+#![feature(drain_filter)]
 #![no_std]
 #![feature(llvm_asm)]
 #![feature(panic_info_message)]

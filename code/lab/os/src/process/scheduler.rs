@@ -1,5 +1,8 @@
-use crate::process::scheduler::fifo_scheduler::FifoScheduler;
-mod fifo_scheduler;
+pub use crate::process::scheduler::fifo_scheduler::FifoScheduler;
+use crate::process::thread::Thread;
+use alloc::sync::Arc;
+
+pub mod fifo_scheduler;
 
 pub type SchedulerImpl<ThreadType> = FifoScheduler<ThreadType>;
 
